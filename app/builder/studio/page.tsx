@@ -8,13 +8,13 @@ import type { GeneratedApp } from "@/lib/generate-app";
 import type { BuildStreamEvent } from "@/lib/generate-app-ai";
 import { useBuilds } from "@/lib/use-workspace";
 import { cn } from "@/lib/utils";
-import { Check, ExternalLink, LoaderCircle, Rocket, Sparkles } from "lucide-react";
+import { Check, LoaderCircle, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 export default function BuilderStudioPage() {
   const { items, add } = useBuilds();
   const [prompt, setPrompt] = useState("");
-  const [busy, setBusy] = useState<"build" | "deploy" | null>(null);
+  const [busy, setBusy] = useState<"build" | null>(null);
   const [app, setApp] = useState<GeneratedApp | null>(null);
   const [filePath, setFilePath] = useState<string | null>(null);
   const [tab, setTab] = useState<"code" | "preview">("code");
@@ -98,27 +98,6 @@ export default function BuilderStudioPage() {
     }
   }
 
-  async function onDeploy() {
-    if (!app) return;
-    setBusy("deploy");
-    setError(null);
-    try {
-      const res = await fetch("/api/build", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deploy: true, app }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Deploy failed");
-      setApp(data);
-      add(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Deploy failed");
-    } finally {
-      setBusy(null);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
@@ -133,7 +112,7 @@ export default function BuilderStudioPage() {
               Describe it. <span className="text-primary">Ship it.</span>
             </h1>
             <p className="mt-2 max-w-xl text-muted-foreground">
-              Natural language in. A real Next.js app out — previewable online, runnable locally.
+              Natural language in. Preview the generated UI instantly on this page.
             </p>
           </div>
           <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
@@ -237,38 +216,6 @@ export default function BuilderStudioPage() {
                     </div>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={onDeploy}
-                  disabled={busy === "deploy" || app.status === "deployed"}
-                  className="mt-6 inline-flex h-10 w-full items-center justify-center rounded-md bg-primary font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
-                >
-                  {busy === "deploy" ? (
-                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Rocket className="mr-2 h-4 w-4" />
-                  )}
-                  {app.status === "deployed" ? "deployed" : "deploy_now"}
-                </button>
-                {app.url ? (
-                  <a
-                    href={app.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-3 inline-flex items-center gap-1 break-all font-mono text-xs text-primary hover:underline"
-                  >
-                    {app.url}
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                ) : null}
-                {app.diskPath ? (
-                  <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-                    {app.diskPath}
-                    <span className="block text-muted-foreground/70">
-                      cd {app.diskPath} && npm i && npm run dev
-                    </span>
-                  </p>
-                ) : null}
               </aside>
               <div className="lg:col-span-8">
                 <div className="flex gap-2 border-b border-border px-3 py-2">
@@ -290,8 +237,7 @@ export default function BuilderStudioPage() {
                   <SandboxedPreview
                     title={`${app.slug} preview`}
                     className="h-[640px] w-full"
-                    src={app.status === "deployed" ? `/api/preview/${app.slug}` : undefined}
-                    srcDoc={app.status === "deployed" ? undefined : app.previewHtml}
+                    srcDoc={app.previewHtml || "<!doctype html><title>Preview</title><p>No preview.</p>"}
                   />
                 ) : (
                   <>
