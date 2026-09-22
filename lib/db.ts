@@ -5,6 +5,15 @@ const globalForDb = globalThis as unknown as {
   mysqlSchema?: Promise<void>;
 };
 
+export function isDatabaseConfigured() {
+  return Boolean(
+    process.env.DATABASE_HOST?.trim() &&
+      process.env.DATABASE_USER?.trim() &&
+      process.env.DATABASE_PASSWORD?.trim() &&
+      process.env.DATABASE_NAME?.trim(),
+  );
+}
+
 function required(name: string) {
   const value = process.env[name]?.trim();
   if (!value) {
@@ -22,7 +31,8 @@ export function getPool() {
       password: required("DATABASE_PASSWORD"),
       database: required("DATABASE_NAME"),
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 4,
+      connectTimeout: 8000,
       enableKeepAlive: true,
       charset: "utf8mb4",
     });

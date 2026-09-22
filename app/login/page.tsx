@@ -44,6 +44,12 @@ function LoginForm() {
   }
 
   const oauthError = searchParams.get("error");
+  const oauthMessage =
+    oauthError === "AccessDenied"
+      ? "Google sign-in could not finish saving your account. Try again, or use email."
+      : oauthError
+        ? "Sign in was not completed. Try again or use email instead."
+        : "";
 
   return (
     <AuthShell
@@ -62,9 +68,9 @@ function LoginForm() {
       prompt="$ auth --login"
     >
       <form className="space-y-6" onSubmit={onSubmit}>
-        {error || oauthError ? (
+        {error || oauthMessage ? (
           <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {error || "Sign in was not completed. Try again or use email instead."}
+            {error || oauthMessage}
           </p>
         ) : null}
         <AuthInput

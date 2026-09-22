@@ -30,13 +30,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider !== "google") return true;
       if (!user.email) return false;
-      const saved = await upsertGoogleUser({
-        email: user.email,
-        name: user.name,
-        image: user.image,
-        googleId: account.providerAccountId,
-      });
-      user.id = saved.id;
+      try {
+        const saved = await upsertGoogleUser({
+          email: user.email,
+          name: user.name,
+          image: user.image,
+          googleId: account.providerAccountId,
+        });
+        user.id = saved.id;
+      } catch (error) {
+        console.error("google sign-in persist failed", error);
+        user.id = account.providerAccountId;
+      }
       return true;
     },
     async jwt({ token, user }) {
