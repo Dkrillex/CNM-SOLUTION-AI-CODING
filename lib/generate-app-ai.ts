@@ -30,13 +30,14 @@ Shape:
 }
 
 Rules:
-- files MUST include: package.json, app/layout.tsx, app/page.tsx, app/globals.css, README.md, plus API routes, prisma/schema.prisma, and any auth/payment helpers the product needs.
+- files MUST include: package.json, app/layout.tsx, app/page.tsx, app/globals.css, README.md.
+- Add at most 2 extra files if the product needs an API route or helper.
 - package.json scripts: dev/build/start. Dependencies must be real (next, react, react-dom, typescript).
 - Code must be complete TypeScript/TSX, no placeholders like TODO or "implement later".
 - UI must match the user's request, not a generic hello world.
-- previewHtml is a full HTML document the user can open immediately; style it as the finished product.
+- previewHtml is a compact standalone HTML page; keep it under 80 lines.
 - slug: lowercase kebab-case, ascii only.
-- 8-14 files. No binary files.`;
+- 5-7 files. No binary files.`;
 
 function langOf(filePath: string) {
   const ext = filePath.split(".").pop()?.toLowerCase();
@@ -155,6 +156,7 @@ export async function* generateAppWithAiStream(
     type: "status",
     message: `connecting ${config?.model ?? "model"} · ${config?.baseUrl ?? ""}`,
   };
+  yield { type: "status", message: "waiting for first token" };
   let raw = "";
   let first = true;
   for await (const piece of chatJsonStream(SYSTEM, `Build this product:\n${prompt}`)) {

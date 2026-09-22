@@ -102,7 +102,7 @@ export function parseJsonObject(raw: string) {
   );
 }
 
-async function openStream(config: AiConfig, system: string, user: string, jsonMode: boolean) {
+async function openStream(config: AiConfig, system: string, user: string) {
   const res = await fetch(`${config.baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
@@ -113,7 +113,6 @@ async function openStream(config: AiConfig, system: string, user: string, jsonMo
       model: config.model,
       temperature: 0.4,
       stream: true,
-      ...(jsonMode ? { response_format: { type: "json_object" } } : {}),
       messages: [
         { role: "system", content: system },
         { role: "user", content: user },
@@ -135,12 +134,7 @@ export async function* chatJsonStream(
   const config = getAiConfig();
   if (!config) throw new Error("AI API is not configured");
 
-  let body: ReadableStream<Uint8Array>;
-  try {
-    body = await openStream(config, system, user, true);
-  } catch {
-    body = await openStream(config, system, user, false);
-  }
+  const body = await openStream(config, system, user);
 
   const reader = body.getReader();
   const decoder = new TextDecoder();
