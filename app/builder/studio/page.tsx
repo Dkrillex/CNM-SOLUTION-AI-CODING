@@ -143,7 +143,8 @@ export default function BuilderStudioPage() {
         </FadeInOnMount>
         {!ai?.configured ? (
           <p className="mt-4 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-            AI generation is not configured yet. Connect an OpenAI-compatible model on the server to generate runnable projects.
+            AI generation is not configured. Set AI_API_KEY, AI_BASE_URL, and AI_MODEL
+            in Vercel (Production), then Redeploy.
           </p>
         ) : null}
 

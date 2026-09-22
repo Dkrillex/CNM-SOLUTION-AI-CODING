@@ -4,15 +4,24 @@ export type AiConfig = {
   model: string;
 };
 
+function readEnv(...names: string[]) {
+  for (const name of names) {
+    const value = process.env[name]?.trim();
+    if (value) return value;
+  }
+  return "";
+}
+
 export function getAiConfig(): AiConfig | null {
-  const apiKey = (process.env.AI_API_KEY || process.env.OPENAI_API_KEY || "").trim();
+  const apiKey = readEnv("AI_API_KEY", "OPENAI_API_KEY");
   if (!apiKey) return null;
   return {
     apiKey,
-    baseUrl: (process.env.AI_BASE_URL || process.env.OPENAI_BASE_URL || "https://api.openai.com/v1")
-      .trim()
-      .replace(/\/$/, ""),
-    model: (process.env.AI_MODEL || process.env.OPENAI_MODEL || "gpt-4o-mini").trim(),
+    baseUrl: (readEnv("AI_BASE_URL", "OPENAI_BASE_URL") || "https://api.openai.com/v1").replace(
+      /\/$/,
+      "",
+    ),
+    model: readEnv("AI_MODEL", "OPENAI_MODEL") || "gpt-4o-mini",
   };
 }
 
