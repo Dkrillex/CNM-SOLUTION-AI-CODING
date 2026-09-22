@@ -1,7 +1,7 @@
 "use client";
 
 import { Eyebrow, LiveDot, WindowChrome } from "@/components/ambient";
-import { FadeIn, FadeInOnMount } from "@/components/fade-in";
+import { FadeInOnMount } from "@/components/fade-in";
 import { Navbar } from "@/components/navbar";
 import { SandboxedPreview } from "@/components/sandboxed-preview";
 import type { GeneratedApp } from "@/lib/generate-app";
@@ -85,7 +85,11 @@ export default function BuilderStudioPage() {
             setApp(event.app);
             setFilePath(event.app.files[0]?.path ?? null);
             setTab("preview");
-            add(event.app);
+            try {
+              add(event.app);
+            } catch {
+              /* keep the in-page preview even if history cannot be saved */
+            }
           } else if (event.type === "error") {
             throw new Error(event.message);
           }
@@ -149,34 +153,8 @@ export default function BuilderStudioPage() {
         </form>
         {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
 
-        {busy === "build" || logs.length ? (
-          <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
-            <WindowChrome title="build.stream" live={busy === "build" ? "live" : "idle"} />
-            <div className="border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-              {busy === "build"
-                ? `streaming · ${streamText.length} chars`
-                : `last run · ${streamText.length} chars`}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3">
-              <ol className="space-y-1.5 border-b border-border p-4 font-mono text-[11px] text-muted-foreground md:border-b-0 md:border-r">
-                {logs.map((line, i) => (
-                  <li key={`${line}-${i}`} className="break-all">
-                    <span className="text-primary">→</span> {line}
-                  </li>
-                ))}
-              </ol>
-              <pre
-                ref={logRef}
-                className="max-h-72 overflow-auto p-4 font-mono text-[11px] leading-relaxed text-muted-foreground md:col-span-2"
-              >
-                {streamText || (busy === "build" ? "waiting for first token…" : "")}
-              </pre>
-            </div>
-          </div>
-        ) : null}
-
         {app ? (
-          <FadeIn className="mt-8 overflow-hidden rounded-xl border border-border bg-card">
+          <FadeInOnMount className="mt-8 overflow-hidden rounded-xl border border-border bg-card">
             <WindowChrome title={`${app.slug}.cnmsolution.ai`} />
             <div className="grid grid-cols-1 lg:grid-cols-12">
               <aside className="border-b border-border p-5 lg:col-span-4 lg:border-b-0 lg:border-r">
@@ -186,7 +164,7 @@ export default function BuilderStudioPage() {
                 <h2 className="mt-2 text-xl font-semibold tracking-tight">{app.name}</h2>
                 <p className="mt-2 text-sm text-muted-foreground">{app.summary}</p>
                 <div className="mt-4 flex flex-wrap gap-1.5">
-                  {app.stack.map((s) => (
+                  {(app.stack ?? []).map((s) => (
                     <span
                       key={s}
                       className="rounded-md border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
@@ -196,7 +174,7 @@ export default function BuilderStudioPage() {
                   ))}
                 </div>
                 <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
-                  {app.features.map((f) => (
+                  {(app.features ?? []).map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                       {f}
@@ -207,7 +185,7 @@ export default function BuilderStudioPage() {
                   <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
                     schema
                   </p>
-                  {app.schema.map((t) => (
+                  {(app.schema ?? []).map((t) => (
                     <div key={t.table} className="rounded-md border border-border px-3 py-2">
                       <div className="font-mono text-xs text-primary">{t.table}</div>
                       <div className="mt-1 font-mono text-[11px] text-muted-foreground">
@@ -219,7 +197,7 @@ export default function BuilderStudioPage() {
               </aside>
               <div className="lg:col-span-8">
                 <div className="flex gap-2 border-b border-border px-3 py-2">
-                  {(["code", "preview"] as const).map((key) => (
+                  {(["preview", "code"] as const).map((key) => (
                     <button
                       key={key}
                       type="button"
@@ -265,7 +243,33 @@ export default function BuilderStudioPage() {
                 )}
               </div>
             </div>
-          </FadeIn>
+          </FadeInOnMount>
+        ) : null}
+
+        {busy === "build" || logs.length ? (
+          <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
+            <WindowChrome title="build.stream" live={busy === "build" ? "live" : "idle"} />
+            <div className="border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              {busy === "build"
+                ? `streaming · ${streamText.length} chars`
+                : `last run · ${streamText.length} chars`}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <ol className="space-y-1.5 border-b border-border p-4 font-mono text-[11px] text-muted-foreground md:border-b-0 md:border-r">
+                {logs.map((line, i) => (
+                  <li key={`${line}-${i}`} className="break-all">
+                    <span className="text-primary">→</span> {line}
+                  </li>
+                ))}
+              </ol>
+              <pre
+                ref={logRef}
+                className="max-h-72 overflow-auto p-4 font-mono text-[11px] leading-relaxed text-muted-foreground md:col-span-2"
+              >
+                {streamText || (busy === "build" ? "waiting for first token…" : "")}
+              </pre>
+            </div>
+          </div>
         ) : null}
 
         {items.length ? (

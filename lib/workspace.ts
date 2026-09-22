@@ -15,7 +15,11 @@ function read<T>(key: string): T[] {
 }
 
 function write<T>(key: string, value: T[]) {
-  window.localStorage.setItem(key, JSON.stringify(value));
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* quota or private mode */
+  }
 }
 
 export function loadScreenings(): ScreenResult[] {
