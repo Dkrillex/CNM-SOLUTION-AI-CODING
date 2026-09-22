@@ -1,0 +1,56 @@
+import mysql from "mysql2/promise";
+
+const globalForDb = globalThis as unknown as {
+  mysqlPool?: mysql.Pool;
+  mysqlSchema?: Promise<void>;
+};
+
+function required(name: string) {
+  const value = process.env[name]?.trim();
+  if (!value) {
+    throw new Error(`Missing ${name}. Add it to .env.local`);
+  }
+  return value;
+}
+
+export function getPool() {
+  if (!globalForDb.mysqlPool) {
+    globalForDb.mysqlPool = mysql.createPool({
+      host: required("DATABASE_HOST"),
+      port: Number(process.env.DATABASE_PORT || 3306),
+      user: required("DATABASE_USER"),
+      password: required("DATABASE_PASSWORD"),
+      database: required("DATABASE_NAME"),
+      waitForConnections: true,
+      connectionLimit: 10,
+      enableKeepAlive: true,
+      charset: "utf8mb4",
+    });
+  }
+  return globalForDb.mysqlPool;
+}
+
+export async function ensureSchema() {
+  if (!globalForDb.mysqlSchema) {
+    globalForDb.mysqlSchema = getPool()
+      .query(
+        `CREATE TABLE IF NOT EXISTS users (
+          id CHAR(36) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          name VARCHAR(255) NULL,
+          password_hash VARCHAR(255) NULL,
+          image VARCHAR(1024) NULL,
+          google_id VARCHAR(255) NULL,
+          provider VARCHAR(32) NOT NULL DEFAULT 'credentials',
+          last_login_at DATETIME NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (id),
+          UNIQUE KEY uk_users_email (email),
+          UNIQUE KEY uk_users_google_id (google_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+      )
+      .then(() => undefined);
+  }
+  await globalForDb.mysqlSchema;
+}
