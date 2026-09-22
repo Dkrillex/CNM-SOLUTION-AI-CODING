@@ -14,7 +14,8 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 export default function BuilderStudioPage() {
   const { items, add } = useBuilds();
   const [prompt, setPrompt] = useState("");
-  const [busy, setBusy] = useState<"build" | null>(null);
+  const [revision, setRevision] = useState("");
+  const [busy, setBusy] = useState<"generate" | "revise" | null>(null);
   const [app, setApp] = useState<GeneratedApp | null>(null);
   const [filePath, setFilePath] = useState<string | null>(null);
   const [tab, setTab] = useState<"code" | "preview">("code");
@@ -56,9 +57,9 @@ export default function BuilderStudioPage() {
   }
 
   async function runBuild(revise: boolean) {
-    const text = prompt.trim();
+    const text = (revise ? revision : prompt).trim();
     if (!text) return;
-    setBusy("build");
+    setBusy(revise ? "revise" : "generate");
     setError(null);
     setLogs([revise ? "POST /api/build · revise" : "POST /api/build · stream"]);
     setStreamText("");
@@ -106,6 +107,7 @@ export default function BuilderStudioPage() {
             setApp(event.app);
             setFilePath((current) => current ?? event.app.files[0]?.path ?? null);
             setTab("preview");
+            if (revise) setRevision("");
             try {
               add(event.app);
             } catch {
@@ -161,44 +163,20 @@ export default function BuilderStudioPage() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             required
-            placeholder={
-              app
-                ? 'e.g. "make the hero bilingual and add a pricing table"'
-                : 'e.g. "a course sales platform with Stripe checkout"'
-            }
+            placeholder='e.g. "a course sales platform with Stripe checkout"'
             className="h-12 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
-          {app ? (
-            <button
-              type="button"
-              disabled={busy === "build"}
-              onClick={() => runBuild(true)}
-              className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
-            >
-              {busy === "build" ? (
-                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <WandSparkles className="mr-2 h-4 w-4" />
-              )}
-              {busy === "build" ? "revising…" : "revise_with_ai"}
-            </button>
-          ) : null}
           <button
             type="submit"
-            disabled={busy === "build"}
-            className={cn(
-              "inline-flex h-12 items-center justify-center rounded-md px-6 font-mono text-xs uppercase tracking-widest disabled:opacity-60",
-              app
-                ? "border border-border hover:border-primary/40 hover:bg-accent hover:text-primary"
-                : "bg-primary text-primary-foreground hover:bg-primary/90",
-            )}
+            disabled={busy !== null}
+            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
           >
-            {busy === "build" ? (
+            {busy === "generate" ? (
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <Sparkles className="mr-2 h-4 w-4" />
             )}
-            {busy === "build" ? "generating…" : app ? "new_app" : "generate_app"}
+            {busy === "generate" ? "generating…" : app ? "new_app" : "generate_app"}
           </button>
         </form>
         {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
@@ -296,14 +274,49 @@ export default function BuilderStudioPage() {
                 )}
               </div>
             </div>
+            <form
+              className="border-t border-border bg-background/40 p-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void runBuild(true);
+              }}
+            >
+              <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+                ask ai to edit this project
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                The model keeps the current files and applies your next instruction.
+              </p>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                <input
+                  value={revision}
+                  onChange={(e) => setRevision(e.target.value)}
+                  required
+                  placeholder='e.g. "make the hero bilingual and add a pricing table"'
+                  className="h-12 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                />
+                <button
+                  type="submit"
+                  disabled={busy !== null}
+                  className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+                >
+                  {busy === "revise" ? (
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <WandSparkles className="mr-2 h-4 w-4" />
+                  )}
+                  {busy === "revise" ? "revising…" : "revise_with_ai"}
+                </button>
+              </div>
+            </form>
           </FadeInOnMount>
         ) : null}
 
-        {busy === "build" || logs.length ? (
+        {busy || logs.length ? (
           <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
-            <WindowChrome title="build.stream" live={busy === "build" ? "live" : "idle"} />
+            <WindowChrome title="build.stream" live={busy ? "live" : "idle"} />
             <div className="border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-              {busy === "build"
+              {busy
                 ? `streaming · ${streamText.length} chars`
                 : `last run · ${streamText.length} chars`}
             </div>
@@ -319,7 +332,7 @@ export default function BuilderStudioPage() {
                 ref={logRef}
                 className="max-h-72 overflow-auto p-4 font-mono text-[11px] leading-relaxed text-muted-foreground md:col-span-2"
               >
-                {streamText || (busy === "build" ? "waiting for first token…" : "")}
+                {streamText || (busy ? "waiting for first token…" : "")}
               </pre>
             </div>
           </div>
