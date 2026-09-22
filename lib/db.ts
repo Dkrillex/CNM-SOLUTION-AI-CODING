@@ -32,7 +32,7 @@ export function getPool() {
       database: required("DATABASE_NAME"),
       waitForConnections: true,
       connectionLimit: 4,
-      connectTimeout: 8000,
+      connectTimeout: 15000,
       enableKeepAlive: true,
       charset: "utf8mb4",
     });
