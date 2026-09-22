@@ -1,7 +1,8 @@
-import { getClientDownloadUrl } from "@/lib/client-download";
 import { NextResponse } from "next/server";
 
-export function GET(request: Request) {
-  const platform = new URL(request.url).searchParams.get("platform");
-  return NextResponse.redirect(getClientDownloadUrl(platform), 302);
+export function GET() {
+  return NextResponse.json(
+    { error: "Desktop client is coming soon." },
+    { status: 404 },
+  );
 }

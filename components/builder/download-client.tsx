@@ -3,16 +3,9 @@
 import { Eyebrow, LiveDot, WindowChrome } from "@/components/ambient";
 import { FadeIn } from "@/components/fade-in";
 import { GlowCard } from "@/components/glow-card";
-import {
-  CLIENT_PLATFORMS,
-  clientDownloadHref,
-  detectClientPlatform,
-  platformMeta,
-  type ClientPlatformId,
-} from "@/lib/client-download";
 import { cn } from "@/lib/utils";
 import { Check, Download, Monitor } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const highlights = [
   "Local project workspace",
@@ -28,30 +21,25 @@ export function DownloadClientLink({
   className?: string;
   children?: ReactNode;
 }) {
-  const [href, setHref] = useState(clientDownloadHref("mac-arm"));
-
-  useEffect(() => {
-    setHref(clientDownloadHref(detectClientPlatform()));
-  }, []);
-
   return (
-    <a href={href} className={className}>
+    <span className={cn("cursor-not-allowed opacity-60", className)} title="Coming soon">
       {children}
-    </a>
+    </span>
   );
 }
 
 export function DownloadClientHeroButton({ className }: { className?: string }) {
   return (
-    <a
-      href="#download"
+    <button
+      type="button"
+      disabled
       className={cn(
-        "inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 font-mono text-sm uppercase tracking-widest hover:border-primary/40 hover:bg-accent hover:text-primary",
+        "inline-flex h-12 cursor-not-allowed items-center justify-center rounded-md border border-border bg-background px-7 font-mono text-sm uppercase tracking-widest opacity-60",
         className,
       )}
     >
-      download_client
-    </a>
+      coming_soon
+    </button>
   );
 }
 
@@ -77,7 +65,19 @@ export function DownloadClientSection() {
                 </li>
               ))}
             </ul>
-            <DownloadButtons className="mt-8" />
+            <div className="mt-8">
+              <button
+                type="button"
+                disabled
+                className="inline-flex h-12 cursor-not-allowed items-center justify-center rounded-md border border-border px-7 font-mono text-sm uppercase tracking-widest text-muted-foreground opacity-70"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                coming_soon
+              </button>
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                desktop client is not available yet
+              </p>
+            </div>
           </FadeIn>
           <FadeIn delay={0.08} className="lg:col-span-6">
             <DesktopPreview />
@@ -85,48 +85,6 @@ export function DownloadClientSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-export function DownloadButtons({ className }: { className?: string }) {
-  const [platform, setPlatform] = useState<ClientPlatformId>("mac-arm");
-
-  useEffect(() => {
-    setPlatform(detectClientPlatform());
-  }, []);
-
-  const current = platformMeta(platform);
-
-  return (
-    <div className={className}>
-      <a
-        href={clientDownloadHref(platform)}
-        className="group inline-flex h-12 items-center justify-center rounded-md bg-primary px-7 font-mono text-sm uppercase tracking-widest text-primary-foreground transition-transform hover:-translate-y-0.5 hover:bg-primary/90"
-      >
-        <Download className="mr-2 h-4 w-4" />
-        download_{current.label.toLowerCase().replace(/\s+/g, "_")}
-      </a>
-      <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-        {current.detail} · {current.file}
-      </p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {CLIENT_PLATFORMS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => setPlatform(p.id)}
-            className={cn(
-              "rounded-md border px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest transition-colors",
-              platform === p.id
-                ? "border-primary/40 bg-primary/10 text-primary"
-                : "border-border text-muted-foreground hover:border-primary/30 hover:text-foreground",
-            )}
-          >
-            {p.label} {p.detail}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 

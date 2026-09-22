@@ -33,21 +33,8 @@ export const CLIENT_PLATFORMS = [
 
 export type ClientPlatformId = (typeof CLIENT_PLATFORMS)[number]["id"];
 
-const CLAUDE_DESKTOP: Record<ClientPlatformId, string> = {
-  "mac-arm": "https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect",
-  "mac-intel": "https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect",
-  "win-x64": "https://claude.ai/api/desktop/win32/x64/exe/latest/redirect",
-  "win-arm": "https://claude.ai/api/desktop/win32/arm64/exe/latest/redirect",
-  linux: "https://claude.com/download",
-};
-
 export function isClientPlatformId(value: string | null): value is ClientPlatformId {
   return CLIENT_PLATFORMS.some((p) => p.id === value);
-}
-
-export function getClientDownloadUrl(platform: string | null): string {
-  if (isClientPlatformId(platform)) return CLAUDE_DESKTOP[platform];
-  return CLAUDE_DESKTOP["mac-arm"];
 }
 
 export function clientDownloadHref(platform: ClientPlatformId): string {

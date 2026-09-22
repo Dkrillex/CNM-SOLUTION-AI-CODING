@@ -1,3 +1,5 @@
+import { SandboxedPreview } from "@/components/sandboxed-preview";
+
 export default async function PreviewPage({
   params,
 }: {
@@ -5,10 +7,10 @@ export default async function PreviewPage({
 }) {
   const { slug } = await params;
   return (
-    <iframe
+    <SandboxedPreview
       title={slug}
       src={`/api/preview/${slug}`}
-      className="h-screen w-full border-0 bg-background"
+      className="h-screen w-full"
     />
   );
 }

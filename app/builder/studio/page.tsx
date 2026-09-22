@@ -3,6 +3,7 @@
 import { Eyebrow, LiveDot, WindowChrome } from "@/components/ambient";
 import { FadeIn, FadeInOnMount } from "@/components/fade-in";
 import { Navbar } from "@/components/navbar";
+import { SandboxedPreview } from "@/components/sandboxed-preview";
 import type { GeneratedApp } from "@/lib/generate-app";
 import type { BuildStreamEvent } from "@/lib/generate-app-ai";
 import { useBuilds } from "@/lib/use-workspace";
@@ -286,9 +287,9 @@ export default function BuilderStudioPage() {
                   ))}
                 </div>
                 {tab === "preview" ? (
-                  <iframe
-                    title="preview"
-                    className="h-[640px] w-full bg-zinc-950"
+                  <SandboxedPreview
+                    title={`${app.slug} preview`}
+                    className="h-[640px] w-full"
                     src={app.status === "deployed" ? `/api/preview/${app.slug}` : undefined}
                     srcDoc={app.status === "deployed" ? undefined : app.previewHtml}
                   />
