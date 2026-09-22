@@ -1,6 +1,6 @@
 "use client";
 
-import { isGoogleConfigured } from "@/app/actions/auth";
+import { getGoogleConfigured } from "@/app/actions/google";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -30,18 +30,22 @@ function GoogleMark() {
 export function GoogleAuthButton({ label }: { label: string }) {
   const [pending, setPending] = useState(false);
   const [setup, setSetup] = useState(false);
+  const [error, setError] = useState("");
+  const origin =
+    typeof window === "undefined" ? "http://localhost:3000" : window.location.origin;
 
   async function onClick() {
     setPending(true);
+    setError("");
     try {
-      const ready = await isGoogleConfigured();
+      const ready = await getGoogleConfigured();
       if (!ready) {
         setSetup(true);
         return;
       }
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch {
-      setSetup(true);
+      setError("Google sign-in is unavailable. Try again or use email.");
     } finally {
       setPending(false);
     }
@@ -58,6 +62,9 @@ export function GoogleAuthButton({ label }: { label: string }) {
         <GoogleMark />
         {pending ? "Connecting…" : label}
       </button>
+      {error ? (
+        <p className="text-center text-sm text-destructive">{error}</p>
+      ) : null}
       {setup ? (
         <div
           className="fixed inset-0 z-[80] flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm"
@@ -88,24 +95,21 @@ export function GoogleAuthButton({ label }: { label: string }) {
               </li>
               <li>
                 Authorized JavaScript origin:{" "}
-                <code className="font-mono text-foreground">http://localhost:3000</code>
+                <code className="font-mono text-foreground">{origin}</code>
               </li>
               <li>
                 Authorized redirect URI:{" "}
                 <code className="font-mono text-xs text-foreground">
-                  http://localhost:3000/api/auth/callback/google
+                  {origin}/api/auth/callback/google
                 </code>
               </li>
               <li>
-                Put the values in{" "}
-                <code className="font-mono text-foreground">.env.local</code> then restart{" "}
-                <code className="font-mono text-foreground">npm run dev</code>:
+                Set{" "}
+                <code className="font-mono text-foreground">AUTH_GOOGLE_ID</code> and{" "}
+                <code className="font-mono text-foreground">AUTH_GOOGLE_SECRET</code>{" "}
+                on the server, then redeploy.
               </li>
             </ol>
-            <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-3 font-mono text-xs leading-6">
-              {`AUTH_GOOGLE_ID=your-client-id.apps.googleusercontent.com
-AUTH_GOOGLE_SECRET=your-client-secret`}
-            </pre>
             <button
               type="button"
               onClick={() => setSetup(false)}

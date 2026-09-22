@@ -32,8 +32,9 @@ export function getPool() {
 
 export async function ensureSchema() {
   if (!globalForDb.mysqlSchema) {
-    globalForDb.mysqlSchema = getPool()
-      .query(
+    globalForDb.mysqlSchema = (async () => {
+      const pool = getPool();
+      await pool.query(
         `CREATE TABLE IF NOT EXISTS users (
           id CHAR(36) NOT NULL,
           email VARCHAR(255) NOT NULL,
@@ -49,8 +50,20 @@ export async function ensureSchema() {
           UNIQUE KEY uk_users_email (email),
           UNIQUE KEY uk_users_google_id (google_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-      )
-      .then(() => undefined);
+      );
+      await pool.query(
+        `CREATE TABLE IF NOT EXISTS contacts (
+          id CHAR(36) NOT NULL,
+          name VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          topic VARCHAR(32) NOT NULL,
+          message TEXT NOT NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id),
+          KEY idx_contacts_created (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+      );
+    })();
   }
   await globalForDb.mysqlSchema;
 }

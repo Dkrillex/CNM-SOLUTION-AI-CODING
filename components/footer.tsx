@@ -4,15 +4,26 @@ import Link from "next/link";
 const columns = [
   {
     title: "Builder",
-    links: ["Generator", "Templates", "Deploy", "API"],
+    links: [
+      { href: "/builder", label: "Builder" },
+      { href: "/builder/studio", label: "Generator" },
+    ],
   },
   {
     title: "Compliance",
-    links: ["Screening", "Cases", "Risk", "Monitoring"],
+    links: [
+      { href: "/aml/screening", label: "Screening" },
+      { href: "/aml/cases", label: "Cases" },
+    ],
   },
   {
     title: "Company",
-    links: ["About", "Contact", "Privacy", "Terms"],
+    links: [
+      { href: "/about", label: "About" },
+      { href: "/contact", label: "Contact" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
+    ],
   },
 ];
 
@@ -39,12 +50,12 @@ export function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 {col.links.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="text-foreground/80 transition-colors hover:text-primary"
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -53,7 +64,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row">
-          <span>© power by 3GO TECHNOLOGY PTE. LTD</span>
+          <span>© power by CNM SOLUTION</span>
           <span className="flex items-center gap-2">
             <LiveDot />
             all systems operational

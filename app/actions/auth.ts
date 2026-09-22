@@ -3,12 +3,6 @@
 import { signOut } from "@/auth";
 import { createCredentialsUser } from "@/lib/users";
 
-export async function isGoogleConfigured() {
-  return Boolean(
-    process.env.AUTH_GOOGLE_ID?.trim() && process.env.AUTH_GOOGLE_SECRET?.trim(),
-  );
-}
-
 export async function signOutNow() {
   await signOut({ redirectTo: "/" });
 }
@@ -25,16 +19,16 @@ export async function registerAccount(input: {
   const confirmPassword = input.confirmPassword;
 
   if (name.length < 2) {
-    return { error: "姓名至少需要 2 个字符" };
+    return { error: "Name must be at least 2 characters." };
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { error: "请输入有效的邮箱地址" };
+    return { error: "Enter a valid email address." };
   }
   if (password.length < 8) {
-    return { error: "密码至少需要 8 个字符" };
+    return { error: "Password must be at least 8 characters." };
   }
   if (password !== confirmPassword) {
-    return { error: "两次输入的密码不一致" };
+    return { error: "Passwords do not match." };
   }
 
   try {
@@ -42,9 +36,9 @@ export async function registerAccount(input: {
     return { ok: true as const, email: user.email };
   } catch (error) {
     if (error instanceof Error && error.message === "EMAIL_TAKEN") {
-      return { error: "该邮箱已注册，请直接登录" };
+      return { error: "This email is already registered. Please sign in." };
     }
     console.error("registerAccount", error);
-    return { error: "注册失败，请稍后重试" };
+    return { error: "Sign up failed. Please try again." };
   }
 }

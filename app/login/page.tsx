@@ -31,13 +31,13 @@ function LoginForm() {
         redirect: false,
       });
       if (result?.error) {
-        setError("邮箱或密码不正确，也可以尝试 Google 登录");
+        setError("Incorrect email or password. You can also sign in with Google.");
         return;
       }
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("登录失败，请稍后重试");
+      setError("Sign in failed. Please try again.");
     } finally {
       setPending(false);
     }
@@ -64,7 +64,7 @@ function LoginForm() {
       <form className="space-y-6" onSubmit={onSubmit}>
         {error || oauthError ? (
           <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {error || "登录未完成，请重试或改用邮箱登录"}
+            {error || "Sign in was not completed. Try again or use email instead."}
           </p>
         ) : null}
         <AuthInput

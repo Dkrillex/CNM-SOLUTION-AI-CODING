@@ -1,13 +1,14 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { isGoogleConfigured } from "@/lib/google";
 import { upsertGoogleUser, verifyCredentials } from "@/lib/users";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   session: { strategy: "jwt" },
   providers: [
-    Google,
+    ...(isGoogleConfigured() ? [Google] : []),
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },

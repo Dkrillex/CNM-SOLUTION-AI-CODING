@@ -2,6 +2,7 @@
 
 import { signOutNow } from "@/app/actions/auth";
 import { EASE } from "@/components/motion";
+import { shouldLoadSession } from "@/lib/session-routes";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -130,6 +131,39 @@ export function Navbar() {
 }
 
 function AuthActions({ compact = false }: { compact?: boolean }) {
+  const pathname = usePathname();
+  if (!shouldLoadSession(pathname)) {
+    return <GuestActions compact={compact} />;
+  }
+  return <SessionAuthActions compact={compact} />;
+}
+
+function GuestActions({ compact = false }: { compact?: boolean }) {
+  return (
+    <>
+      <Link
+        href="/login"
+        className={cn(
+          "inline-flex h-10 items-center justify-center rounded-md px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-accent hover:text-accent-foreground",
+          compact && "flex-1 text-center text-muted-foreground hover:bg-muted hover:text-foreground",
+        )}
+      >
+        login
+      </Link>
+      <Link
+        href="/signup"
+        className={cn(
+          "inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 font-mono text-xs uppercase tracking-widest text-primary-foreground transition-transform hover:-translate-y-0.5 hover:bg-primary/90",
+          compact && "flex-1 text-center",
+        )}
+      >
+        start_free
+      </Link>
+    </>
+  );
+}
+
+function SessionAuthActions({ compact = false }: { compact?: boolean }) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -164,26 +198,5 @@ function AuthActions({ compact = false }: { compact?: boolean }) {
     );
   }
 
-  return (
-    <>
-      <Link
-        href="/login"
-        className={cn(
-          "inline-flex h-10 items-center justify-center rounded-md px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-accent hover:text-accent-foreground",
-          compact && "flex-1 text-center text-muted-foreground hover:bg-muted hover:text-foreground",
-        )}
-      >
-        login
-      </Link>
-      <Link
-        href="/signup"
-        className={cn(
-          "inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 font-mono text-xs uppercase tracking-widest text-primary-foreground transition-transform hover:-translate-y-0.5 hover:bg-primary/90",
-          compact && "flex-1 text-center",
-        )}
-      >
-        start_free
-      </Link>
-    </>
-  );
+  return <GuestActions compact={compact} />;
 }

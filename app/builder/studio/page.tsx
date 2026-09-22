@@ -143,7 +143,7 @@ export default function BuilderStudioPage() {
         </FadeInOnMount>
         {!ai?.configured ? (
           <p className="mt-4 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-            还没接到大模型。把 API 地址、Key、模型名发给我（OpenAI 兼容即可，如 DeepSeek / 通义 / OpenRouter），生成的就是可运行的完整项目。
+            AI generation is not configured yet. Connect an OpenAI-compatible model on the server to generate runnable projects.
           </p>
         ) : null}
 

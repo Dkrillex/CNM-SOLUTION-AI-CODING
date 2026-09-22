@@ -44,7 +44,7 @@ export default function SignupPage() {
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("注册失败，请稍后重试");
+      setError("Sign up failed. Please try again.");
     } finally {
       setPending(false);
     }
@@ -123,11 +123,11 @@ export default function SignupPage() {
             <input type="checkbox" required className="mt-1 h-4 w-4 rounded accent-primary" />
             <span className="text-muted-foreground">
               I agree to the{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link href="/terms" className="text-primary hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link href="/privacy" className="text-primary hover:underline">
                 Privacy Policy
               </Link>
             </span>
