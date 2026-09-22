@@ -73,6 +73,18 @@ export async function ensureSchema() {
           KEY idx_contacts_created (created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
       );
+      await pool.query(
+        `CREATE TABLE IF NOT EXISTS generated_apps (
+          slug VARCHAR(40) NOT NULL,
+          name VARCHAR(120) NOT NULL,
+          summary TEXT NULL,
+          preview_html MEDIUMTEXT NOT NULL,
+          payload MEDIUMTEXT NOT NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (slug)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+      );
     })();
   }
   await globalForDb.mysqlSchema;

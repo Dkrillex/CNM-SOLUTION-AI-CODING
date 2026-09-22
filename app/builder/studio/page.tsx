@@ -133,8 +133,7 @@ export default function BuilderStudioPage() {
               Describe it. <span className="text-primary">Ship it.</span>
             </h1>
             <p className="mt-2 max-w-xl text-muted-foreground">
-              Natural language in. A real Next.js app out — written to{" "}
-              <code className="font-mono text-foreground">generated/</code>, previewable, runnable.
+              Natural language in. A real Next.js app out — previewable online, runnable locally.
             </p>
           </div>
           <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
