@@ -3,31 +3,31 @@ export const CLIENT_PLATFORMS = [
     id: "mac-arm",
     label: "macOS",
     detail: "Apple silicon",
-    file: "cnmsolution-Desktop.dmg",
+    file: "ea-esportes-Desktop.dmg",
   },
   {
     id: "mac-intel",
     label: "macOS",
     detail: "Intel",
-    file: "cnmsolution-Desktop-Intel.dmg",
+    file: "ea-esportes-Desktop-Intel.dmg",
   },
   {
     id: "win-x64",
     label: "Windows",
     detail: "x64",
-    file: "cnmsolution-Setup-x64.exe",
+    file: "ea-esportes-Setup-x64.exe",
   },
   {
     id: "win-arm",
     label: "Windows",
     detail: "ARM64",
-    file: "cnmsolution-Setup-arm64.exe",
+    file: "ea-esportes-Setup-arm64.exe",
   },
   {
     id: "linux",
     label: "Linux",
     detail: "Ubuntu / Debian",
-    file: "cnmsolution-desktop.deb",
+    file: "ea-esportes-desktop.deb",
   },
 ] as const;
 

@@ -52,7 +52,7 @@ export function ContactForm() {
         </p>
         <h3 className="mt-2 text-xl font-semibold tracking-tight">We will get back to you</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          Your note is stored with the CNM SOLUTION team. A reply usually goes out within one
+          Your note is stored with the EA ENTRETENIMENTO E ESPORTES LTDA team. A reply usually goes out within one
           business day.
         </p>
         <button

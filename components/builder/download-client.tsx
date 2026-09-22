@@ -51,7 +51,7 @@ export function DownloadClientSection() {
           <FadeIn className="lg:col-span-6">
             <Eyebrow>desktop client</Eyebrow>
             <h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-5xl">
-              cnmsolution.ai on your machine.
+              EA ESPORTES on your machine.
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
               Native desktop client for building, previewing and shipping apps
@@ -91,7 +91,7 @@ export function DownloadClientSection() {
 function DesktopPreview() {
   return (
     <GlowCard>
-      <WindowChrome title="cnmsolution-desktop" live="ready" />
+      <WindowChrome title="ea-esportes-desktop" live="ready" />
       <div className="p-6 md:p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ function DesktopPreview() {
               <Monitor className="h-5 w-5" />
             </span>
             <div>
-              <div className="font-semibold">cnmsolution.ai Desktop</div>
+              <div className="font-semibold">EA ESPORTES Desktop</div>
               <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
                 local builder · v1.0
               </div>
@@ -110,8 +110,8 @@ function DesktopPreview() {
           </span>
         </div>
         <div className="mt-6 space-y-2 font-mono text-xs">
-          <Row k="$ cnm open" v="workspace/" />
-          <Row k="$ cnm build" v='"course sales platform"' />
+          <Row k="$ ea open" v="workspace/" />
+          <Row k="$ ea build" v='"course sales platform"' />
           <Row k="→ generate" v="next.js · stripe · postgres" />
           <Row k="→ preview" v="localhost:3000" tone />
         </div>

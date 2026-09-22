@@ -34,10 +34,10 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 font-mono text-sm font-bold text-primary">
-                C
+              <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 font-mono text-[10px] font-bold text-primary">
+                EA
               </span>
-              <span className="font-mono text-base font-semibold">cnmsolution.ai</span>
+              <span className="font-mono text-base font-semibold">EA ESPORTES</span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               The unified surface for AI application building and AML compliance.
@@ -64,7 +64,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row">
-          <span>© power by CNM SOLUTION</span>
+          <span>© power by EA ENTRETENIMENTO E ESPORTES LTDA</span>
           <span className="flex items-center gap-2">
             <LiveDot />
             all systems operational
@@ -76,7 +76,7 @@ export function Footer() {
 }
 
 export function MiniFooter({
-  left = "© 2026 cnmsolution.ai. All rights reserved.",
+  left = "© 2026 EA ENTRETENIMENTO E ESPORTES LTDA. All rights reserved.",
   right = "builder online",
 }: {
   left?: string;

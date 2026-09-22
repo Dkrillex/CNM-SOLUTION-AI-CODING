@@ -5,8 +5,8 @@ import { Mail, ShieldCheck, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact · CNM SOLUTION",
-  description: "Talk to CNM SOLUTION about AI Builder, AML screening, or a partnership.",
+  title: "Contact · EA ENTRETENIMENTO E ESPORTES LTDA",
+  description: "Talk to EA ENTRETENIMENTO E ESPORTES LTDA about AI Builder, AML screening, or a partnership.",
 };
 
 const channels = [
@@ -33,7 +33,7 @@ export default function ContactPage() {
       current="/contact"
       eyebrow="company"
       title="Contact"
-      subtitle="Send a message and it is stored for the CNM SOLUTION team. Use the form for demos, support, or partnership."
+      subtitle="Send a message and it is stored for the EA ENTRETENIMENTO E ESPORTES LTDA team. Use the form for demos, support, or partnership."
     >
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <GlowCard className="p-6 md:p-8">

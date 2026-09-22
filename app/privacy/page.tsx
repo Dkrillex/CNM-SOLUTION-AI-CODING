@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy · CNM SOLUTION",
-  description: "How CNM SOLUTION collects, uses and stores personal data on cnmsolution.ai.",
+  title: "Privacy Policy · EA ENTRETENIMENTO E ESPORTES LTDA",
+  description: "How EA ENTRETENIMENTO E ESPORTES LTDA collects, uses and stores personal data.",
 };
 
 export default function PrivacyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPage() {
       current="/privacy"
       eyebrow="legal"
       title="Privacy Policy"
-      subtitle="This policy explains what cnmsolution.ai collects when you create an account, sign in with Google, or send a contact message."
+      subtitle="This policy explains what this platform collects when you create an account, sign in with Google, or send a contact message."
     >
       <GlowCard className="px-6 md:px-8">
         <p className="pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
@@ -22,8 +22,8 @@ export default function PrivacyPage() {
         </p>
         <LegalSection title="1. Who we are">
           <p>
-            CNM SOLUTION operates the cnmsolution.ai platform, including AI Builder and Compliance
-            Hub. Questions about this policy can be sent from the{" "}
+            EA ENTRETENIMENTO E ESPORTES LTDA operates this platform, including AI Builder and
+            Compliance Hub. Questions about this policy can be sent from the{" "}
             <Link href="/contact" className="text-primary hover:underline">
               Contact
             </Link>{" "}
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
         <LegalSection title="8. Updates">
           <p>
             If this policy changes in a material way, we will update this page. Continued use of
-            cnmsolution.ai after an update means you accept the revised policy.
+            this platform after an update means you accept the revised policy.
           </p>
         </LegalSection>
       </GlowCard>

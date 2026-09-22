@@ -7,7 +7,7 @@ export type BuildStreamEvent =
   | { type: "done"; app: GeneratedApp }
   | { type: "error"; message: string };
 
-const SYSTEM = `You are cnmsolution.ai Builder. Generate a REAL, runnable Next.js 16 App Router product from the user's brief.
+const SYSTEM = `You are EA ESPORTES Builder. Generate a REAL, runnable Next.js 16 App Router product from the user's brief.
 
 Return ONLY a raw JSON object. No markdown fences, no bash/docker preambles.
 
@@ -71,7 +71,7 @@ function buildPreview(name: string, summary: string, features: string[]) {
 <script src="https://cdn.tailwindcss.com"></script></head>
 <body class="min-h-screen bg-zinc-950 text-zinc-50">
 <main class="mx-auto max-w-3xl px-6 py-20">
-<p class="font-mono text-xs uppercase tracking-widest text-lime-400">cnmsolution.ai · generated</p>
+<p class="font-mono text-xs uppercase tracking-widest text-lime-400">EA ESPORTES · generated</p>
 <h1 class="mt-4 text-5xl font-semibold tracking-tight">${name}</h1>
 <p class="mt-4 text-zinc-400">${summary}</p>
 <ul class="mt-8">${items}</ul>
@@ -85,13 +85,13 @@ export function appFromAiJson(
 ): GeneratedApp {
   const data = parseJsonObject(raw);
 
-  const name = String(data.name || "cnmsolution.ai App").slice(0, 80);
+  const name = String(data.name || "EA ESPORTES App").slice(0, 80);
   const slug =
     String(data.slug || name)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "")
-      .slice(0, 40) || "cnm-app";
+      .slice(0, 40) || "ea-app";
   const summary = String(data.summary || prompt).slice(0, 280);
   const stack = asStringArray(data.stack);
   const features = asStringArray(data.features);
@@ -147,7 +147,7 @@ export function appFromAiJson(
   };
 }
 
-const EDIT_SYSTEM = `You are cnmsolution.ai Builder. Revise an existing generated project.
+const EDIT_SYSTEM = `You are EA ESPORTES Builder. Revise an existing generated project.
 
 Return ONLY a raw JSON object in the same shape as a full project (name, slug, summary, stack, features, schema, previewHtml, files). No markdown fences.
 

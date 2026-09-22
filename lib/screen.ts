@@ -157,7 +157,7 @@ export function runScreen(input: ScreenInput): ScreenResult {
 
   const sources = "OFAC/UN/EU/HMT/PEP/MEDIA";
   const lines = [
-    `$ cnm screen --entity "${name}" --type ${input.type}`,
+    `$ ea screen --entity "${name}" --type ${input.type}`,
     `→ querying 1,000+ sources ....... ok`,
     `→ sanctions (${sources}) .... ${matches.some((m) => m.lists.some((l) => l !== "PEP DATABASE" && l !== "ADVERSE MEDIA" && l !== "WORLD-CHECK")) ? `${matches.length} hit` : "clear"}`,
     `→ pep + adverse media .......... ${matches.some((m) => m.lists.includes("PEP DATABASE") || m.lists.includes("ADVERSE MEDIA")) ? "1 hit" : "clear"}`,

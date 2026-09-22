@@ -5,8 +5,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About · CNM SOLUTION",
-  description: "CNM SOLUTION builds cnmsolution.ai — AI application generation and AML compliance in one platform.",
+  title: "About · EA ENTRETENIMENTO E ESPORTES LTDA",
+  description:
+    "EA ENTRETENIMENTO E ESPORTES LTDA builds AI application generation and AML compliance in one platform.",
 };
 
 const products = [
@@ -44,8 +45,8 @@ export default function AboutPage() {
     <CompanyPage
       current="/about"
       eyebrow="company"
-      title="CNM SOLUTION"
-      subtitle="We operate cnmsolution.ai — a single surface for generating production software and running AML compliance."
+      title="EA ENTRETENIMENTO E ESPORTES LTDA"
+      subtitle="We operate a single surface for generating production software and running AML compliance."
     >
       <div className="grid gap-4 md:grid-cols-2">
         {products.map((item) => (
@@ -74,9 +75,10 @@ export default function AboutPage() {
       <GlowCard className="mt-4 p-6 md:p-8">
         <p className="font-mono text-[11px] uppercase tracking-widest text-primary">who we are</p>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
-          CNM SOLUTION builds tools for teams that cannot choose between speed and regulation.
-          cnmsolution.ai brings an AI application generator and an AML screening engine onto one
-          platform, so product, risk and operations share the same audit trail.
+          EA ENTRETENIMENTO E ESPORTES LTDA builds tools for teams that cannot choose between
+          speed and regulation. The platform brings an AI application generator and an AML
+          screening engine onto one surface, so product, risk and operations share the same audit
+          trail.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link

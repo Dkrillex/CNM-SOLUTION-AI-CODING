@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service · CNM SOLUTION",
-  description: "Terms for using cnmsolution.ai, including AI Builder and Compliance Hub.",
+  title: "Terms of Service · EA ENTRETENIMENTO E ESPORTES LTDA",
+  description: "Terms for using this platform, including AI Builder and Compliance Hub.",
 };
 
 export default function TermsPage() {
@@ -14,7 +14,7 @@ export default function TermsPage() {
       current="/terms"
       eyebrow="legal"
       title="Terms of Service"
-      subtitle="These terms govern access to cnmsolution.ai. By creating an account or using the platform, you agree to them."
+      subtitle="These terms govern access to this platform. By creating an account or using the service, you agree to them."
     >
       <GlowCard className="px-6 md:px-8">
         <p className="pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
@@ -22,8 +22,8 @@ export default function TermsPage() {
         </p>
         <LegalSection title="1. The service">
           <p>
-            CNM SOLUTION provides AI Builder, Compliance Hub, and related account features on
-            cnmsolution.ai. Features may change as we improve the product. Some capabilities are
+            EA ENTRETENIMENTO E ESPORTES LTDA provides AI Builder, Compliance Hub, and related
+            account features on this platform. Features may change as we improve the product. Some capabilities are
             preview-quality and should be validated before production use.
           </p>
         </LegalSection>
@@ -43,7 +43,7 @@ export default function TermsPage() {
             <li>Misuse screening results to harass or unlawfully profile individuals.</li>
             <li>Probe, disrupt or overload the service outside authorized testing.</li>
             <li>Upload unlawful content or attempt to access another customer&apos;s data.</li>
-            <li>Resell the platform without a written agreement with CNM SOLUTION.</li>
+            <li>Resell the platform without a written agreement with EA ENTRETENIMENTO E ESPORTES LTDA.</li>
           </ul>
         </LegalSection>
         <LegalSection title="4. Builder output">
@@ -77,7 +77,7 @@ export default function TermsPage() {
         </LegalSection>
         <LegalSection title="8. Limitation">
           <p>
-            To the extent permitted by law, CNM SOLUTION is not liable for indirect or
+            To the extent permitted by law, EA ENTRETENIMENTO E ESPORTES LTDA is not liable for indirect or
             consequential losses, or for decisions made solely on generated code or screening
             output. The service is provided on an &quot;as is&quot; basis.
           </p>
@@ -85,7 +85,7 @@ export default function TermsPage() {
         <LegalSection title="9. Changes and contact">
           <p>
             We may update these terms by posting a new version on this page. For questions, use
-            the Contact page or email hello@cnmsolution.ai.
+            the Contact page.
           </p>
         </LegalSection>
       </GlowCard>
