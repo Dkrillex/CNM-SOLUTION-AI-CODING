@@ -78,7 +78,11 @@ function buildPreview(name: string, summary: string, features: string[]) {
 </main></body></html>`;
 }
 
-export function appFromAiJson(prompt: string, raw: string): GeneratedApp {
+export function appFromAiJson(
+  prompt: string,
+  raw: string,
+  options?: { allowPartial?: boolean },
+): GeneratedApp {
   const data = parseJsonObject(raw);
 
   const name = String(data.name || "cnmsolution.ai App").slice(0, 80);
@@ -119,7 +123,7 @@ export function appFromAiJson(prompt: string, raw: string): GeneratedApp {
         .slice(0, 16)
     : [];
 
-  if (files.length < 3) {
+  if (files.length < 3 && !options?.allowPartial) {
     throw new Error("AI did not return enough project files");
   }
 
@@ -143,6 +147,50 @@ export function appFromAiJson(prompt: string, raw: string): GeneratedApp {
   };
 }
 
+const EDIT_SYSTEM = `You are cnmsolution.ai Builder. Revise an existing generated project.
+
+Return ONLY a raw JSON object in the same shape as a full project (name, slug, summary, stack, features, schema, previewHtml, files). No markdown fences.
+
+Rules:
+- Apply the user's change. Keep the product identity unless they ask to rename it.
+- Return the complete updated files, not a diff.
+- Keep slug unless the user asks to change it.
+- Update previewHtml so the on-page preview matches the edit.
+- 5-7 files. No binary files.`;
+
+function projectBrief(app: GeneratedApp) {
+  const files = app.files
+    .slice(0, 8)
+    .map((file) => `### ${file.path}\n${file.content.slice(0, 4000)}`)
+    .join("\n\n");
+  return `Current project:
+name: ${app.name}
+slug: ${app.slug}
+summary: ${app.summary}
+stack: ${(app.stack ?? []).join(", ")}
+features: ${(app.features ?? []).join("; ")}
+
+${files}`;
+}
+
+export function mergeGeneratedApp(base: GeneratedApp, incoming: GeneratedApp): GeneratedApp {
+  const byPath = new Map(base.files.map((file) => [file.path, file]));
+  for (const file of incoming.files) byPath.set(file.path, file);
+  return {
+    ...base,
+    name: incoming.name || base.name,
+    summary: incoming.summary || base.summary,
+    stack: incoming.stack.length ? incoming.stack : base.stack,
+    features: incoming.features.length ? incoming.features : base.features,
+    schema: incoming.schema.length ? incoming.schema : base.schema,
+    files: [...byPath.values()],
+    previewHtml: incoming.previewHtml || base.previewHtml,
+    prompt: `${base.prompt}\n\nEdit: ${incoming.prompt}`,
+    status: "generated",
+    source: "ai",
+  };
+}
+
 export async function generateAppWithAi(prompt: string): Promise<GeneratedApp> {
   const raw = await chatJson(SYSTEM, `Build this product:\n${prompt}`);
   return appFromAiJson(prompt, raw);
@@ -150,16 +198,24 @@ export async function generateAppWithAi(prompt: string): Promise<GeneratedApp> {
 
 export async function* generateAppWithAiStream(
   prompt: string,
+  current?: GeneratedApp,
 ): AsyncGenerator<BuildStreamEvent> {
   const config = getAiConfig();
   yield {
     type: "status",
     message: `connecting ${config?.model ?? "model"} · ${config?.baseUrl ?? ""}`,
   };
-  yield { type: "status", message: "waiting for first token" };
+  yield {
+    type: "status",
+    message: current ? "revising existing project" : "waiting for first token",
+  };
+  const system = current ? EDIT_SYSTEM : SYSTEM;
+  const user = current
+    ? `${projectBrief(current)}\n\nApply this change:\n${prompt}`
+    : `Build this product:\n${prompt}`;
   let raw = "";
   let first = true;
-  for await (const piece of chatJsonStream(SYSTEM, `Build this product:\n${prompt}`)) {
+  for await (const piece of chatJsonStream(system, user)) {
     if (first) {
       first = false;
       yield { type: "status", message: "streaming tokens" };
@@ -168,5 +224,6 @@ export async function* generateAppWithAiStream(
     yield { type: "delta", text: piece };
   }
   yield { type: "status", message: `received ${raw.length} chars · parsing project` };
-  yield { type: "done", app: appFromAiJson(prompt, raw) };
+  const next = appFromAiJson(prompt, raw, { allowPartial: Boolean(current) });
+  yield { type: "done", app: current ? mergeGeneratedApp(current, next) : next };
 }

@@ -19,10 +19,11 @@ function encodeEvent(event: BuildStreamEvent) {
 }
 
 export async function POST(req: Request) {
-  const { prompt, deploy, app, stream = true } = (await req.json()) as {
+  const { prompt, deploy, app, stream = true, revise = false } = (await req.json()) as {
     prompt?: string;
     deploy?: boolean;
     stream?: boolean;
+    revise?: boolean;
     app?: GeneratedApp;
   };
 
@@ -59,7 +60,10 @@ export async function POST(req: Request) {
       try {
         if (isAiConfigured()) {
           const { generateAppWithAiStream } = await import("@/lib/generate-app-ai");
-          for await (const event of generateAppWithAiStream(prompt.trim())) {
+          for await (const event of generateAppWithAiStream(
+            prompt.trim(),
+            revise && app ? app : undefined,
+          )) {
             send(event);
           }
         } else {

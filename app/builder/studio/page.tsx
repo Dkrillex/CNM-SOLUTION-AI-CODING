@@ -8,7 +8,7 @@ import type { GeneratedApp } from "@/lib/generate-app";
 import type { BuildStreamEvent } from "@/lib/generate-app-ai";
 import { useBuilds } from "@/lib/use-workspace";
 import { cn } from "@/lib/utils";
-import { Check, LoaderCircle, Sparkles } from "lucide-react";
+import { Check, LoaderCircle, Sparkles, WandSparkles } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 export default function BuilderStudioPage() {
@@ -40,17 +40,38 @@ export default function BuilderStudioPage() {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
   }, [streamText, logs]);
 
-  async function onBuild(e: FormEvent) {
-    e.preventDefault();
+  function updateActiveFile(content: string) {
+    if (!app || !active) return;
+    const files = app.files.map((file) =>
+      file.path === active.path ? { ...file, content } : file,
+    );
+    setApp({
+      ...app,
+      files,
+      previewHtml:
+        active.path === "preview.html" || active.path.endsWith("/preview.html")
+          ? content
+          : app.previewHtml,
+    });
+  }
+
+  async function runBuild(revise: boolean) {
+    const text = prompt.trim();
+    if (!text) return;
     setBusy("build");
     setError(null);
-    setLogs(["POST /api/build · stream"]);
+    setLogs([revise ? "POST /api/build · revise" : "POST /api/build · stream"]);
     setStreamText("");
     try {
       const res = await fetch("/api/build", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, stream: true }),
+        body: JSON.stringify({
+          prompt: text,
+          stream: true,
+          revise,
+          app: revise ? app : undefined,
+        }),
       });
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({}));
@@ -83,7 +104,7 @@ export default function BuilderStudioPage() {
           } else if (event.type === "done") {
             setLogs((prev) => [...prev, `done · ${event.app.files.length} files`]);
             setApp(event.app);
-            setFilePath(event.app.files[0]?.path ?? null);
+            setFilePath((current) => current ?? event.app.files[0]?.path ?? null);
             setTab("preview");
             try {
               add(event.app);
@@ -100,6 +121,11 @@ export default function BuilderStudioPage() {
     } finally {
       setBusy(null);
     }
+  }
+
+  async function onBuild(e: FormEvent) {
+    e.preventDefault();
+    await runBuild(false);
   }
 
   return (
@@ -135,20 +161,44 @@ export default function BuilderStudioPage() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             required
-            placeholder='e.g. "a course sales platform with Stripe checkout"'
+            placeholder={
+              app
+                ? 'e.g. "make the hero bilingual and add a pricing table"'
+                : 'e.g. "a course sales platform with Stripe checkout"'
+            }
             className="h-12 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
+          {app ? (
+            <button
+              type="button"
+              disabled={busy === "build"}
+              onClick={() => runBuild(true)}
+              className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+            >
+              {busy === "build" ? (
+                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <WandSparkles className="mr-2 h-4 w-4" />
+              )}
+              {busy === "build" ? "revising…" : "revise_with_ai"}
+            </button>
+          ) : null}
           <button
             type="submit"
             disabled={busy === "build"}
-            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+            className={cn(
+              "inline-flex h-12 items-center justify-center rounded-md px-6 font-mono text-xs uppercase tracking-widest disabled:opacity-60",
+              app
+                ? "border border-border hover:border-primary/40 hover:bg-accent hover:text-primary"
+                : "bg-primary text-primary-foreground hover:bg-primary/90",
+            )}
           >
             {busy === "build" ? (
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <Sparkles className="mr-2 h-4 w-4" />
             )}
-            {busy === "build" ? "generating…" : "generate_app"}
+            {busy === "build" ? "generating…" : app ? "new_app" : "generate_app"}
           </button>
         </form>
         {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
@@ -236,9 +286,12 @@ export default function BuilderStudioPage() {
                     </button>
                   ))}
                 </div>
-                <pre className="max-h-[640px] overflow-auto p-5 font-mono text-[12px] leading-relaxed text-muted-foreground">
-                  {active?.content}
-                </pre>
+                <textarea
+                  value={active?.content ?? ""}
+                  onChange={(e) => updateActiveFile(e.target.value)}
+                  spellCheck={false}
+                  className="max-h-[640px] min-h-[640px] w-full resize-y border-0 bg-transparent p-5 font-mono text-[12px] leading-relaxed text-muted-foreground outline-none"
+                />
                   </>
                 )}
               </div>
