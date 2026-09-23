@@ -29,7 +29,7 @@ export function Logo({ large = false }: { large?: boolean }) {
           large ? "text-lg" : "text-sm sm:text-base",
         )}
       >
-        cnmsolution.ai
+        cnmsoltion.ai
         <span className="animate-blink text-primary">_</span>
       </span>
     </Link>

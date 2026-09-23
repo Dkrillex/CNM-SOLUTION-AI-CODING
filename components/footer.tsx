@@ -37,7 +37,7 @@ export function Footer() {
               <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 font-mono text-sm font-bold text-primary">
                 C
               </span>
-              <span className="font-mono text-base font-semibold">cnmsolution.ai</span>
+              <span className="font-mono text-base font-semibold">cnmsoltion.ai</span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               The unified surface for AI application building and AML compliance.
@@ -76,7 +76,7 @@ export function Footer() {
 }
 
 export function MiniFooter({
-  left = "© 2026 cnmsolution.ai. All rights reserved.",
+  left = "© 2026 cnmsoltion.ai. All rights reserved.",
   right = "builder online",
 }: {
   left?: string;

@@ -59,7 +59,7 @@ export function Hero() {
             Ship compliant.
           </motion.h1>
           <motion.p variants={fade} className="mt-6 max-w-lg text-lg text-muted-foreground">
-            cnmsolution.ai generates production-ready applications and screens entities
+            cnmsoltion.ai generates production-ready applications and screens entities
             against 1,000+ global data sources — from a single, unified command
             surface.
           </motion.p>

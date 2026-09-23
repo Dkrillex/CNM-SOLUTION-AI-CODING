@@ -183,7 +183,7 @@ export default function BuilderStudioPage() {
 
         {app ? (
           <FadeInOnMount className="mt-8 overflow-hidden rounded-xl border border-border bg-card">
-            <WindowChrome title={`${app.slug}.cnmsolution.ai`} />
+            <WindowChrome title={`${app.slug}.cnmsoltion.ai`} />
             <div className="grid grid-cols-1 lg:grid-cols-12">
               <aside className="border-b border-border p-5 lg:col-span-4 lg:border-b-0 lg:border-r">
                 <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">

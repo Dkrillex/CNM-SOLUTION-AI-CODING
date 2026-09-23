@@ -25,7 +25,7 @@ const steps = [
   {
     n: "01",
     title: "Describe requirements",
-    desc: 'Tell cnmsolution.ai what you want in natural language — e.g. "a course sales platform".',
+    desc: 'Tell cnmsoltion.ai what you want in natural language — e.g. "a course sales platform".',
     items: [
       "Plain-language descriptions",
       "AI infers the business logic",
@@ -118,7 +118,7 @@ export default function BuilderPage() {
               }}
               className="mt-6 max-w-xl text-lg text-muted-foreground"
             >
-              Describe your idea in natural language and cnmsolution.ai generates a complete
+              Describe your idea in natural language and cnmsoltion.ai generates a complete
               full-stack application — frontend, backend and database — all in one
               place.
             </motion.p>
@@ -201,7 +201,7 @@ export default function BuilderPage() {
             <h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-5xl">
               Powerful features, everything you need.
             </h2>
-            <p className="mt-4 text-muted-foreground">From zero to one, cnmsolution.ai handles it all.</p>
+            <p className="mt-4 text-muted-foreground">From zero to one, cnmsoltion.ai handles it all.</p>
           </FadeIn>
           <div className="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
             {features.map((f, i) => (
@@ -227,7 +227,7 @@ export default function BuilderPage() {
             Build almost anything.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Whatever you want to build, cnmsolution.ai can help you ship it.
+            Whatever you want to build, cnmsoltion.ai can help you ship it.
           </p>
         </FadeIn>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

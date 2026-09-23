@@ -12,17 +12,17 @@ export const metadata: Metadata = {
 const channels = [
   {
     icon: Mail,
-    title: "hello@cnmsolution.ai",
+    title: "hello@cnmsoltion.ai",
     desc: "General questions and product demos.",
   },
   {
     icon: ShieldCheck,
-    title: "compliance@cnmsolution.ai",
+    title: "compliance@cnmsoltion.ai",
     desc: "Screening, cases and audit requests.",
   },
   {
     icon: Sparkles,
-    title: "partners@cnmsolution.ai",
+    title: "partners@cnmsoltion.ai",
     desc: "Integrations, resellers and enterprise.",
   },
 ];

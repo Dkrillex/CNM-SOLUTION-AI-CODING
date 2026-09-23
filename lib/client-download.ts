@@ -3,31 +3,31 @@ export const CLIENT_PLATFORMS = [
     id: "mac-arm",
     label: "macOS",
     detail: "Apple silicon",
-    file: "cnmsolution-Desktop.dmg",
+    file: "cnmsoltion-Desktop.dmg",
   },
   {
     id: "mac-intel",
     label: "macOS",
     detail: "Intel",
-    file: "cnmsolution-Desktop-Intel.dmg",
+    file: "cnmsoltion-Desktop-Intel.dmg",
   },
   {
     id: "win-x64",
     label: "Windows",
     detail: "x64",
-    file: "cnmsolution-Setup-x64.exe",
+    file: "cnmsoltion-Setup-x64.exe",
   },
   {
     id: "win-arm",
     label: "Windows",
     detail: "ARM64",
-    file: "cnmsolution-Setup-arm64.exe",
+    file: "cnmsoltion-Setup-arm64.exe",
   },
   {
     id: "linux",
     label: "Linux",
     detail: "Ubuntu / Debian",
-    file: "cnmsolution-desktop.deb",
+    file: "cnmsoltion-desktop.deb",
   },
 ] as const;
 
