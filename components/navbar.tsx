@@ -20,8 +20,8 @@ const links = [
 export function Logo({ large = false }: { large?: boolean }) {
   return (
     <Link href="/" className="group flex items-center gap-2">
-      <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 font-mono text-[10px] font-bold text-primary transition-colors group-hover:bg-primary/20">
-        EA
+      <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/40 bg-primary/10 font-mono text-sm font-bold text-primary transition-colors group-hover:bg-primary/20">
+        C
       </span>
       <span
         className={cn(
@@ -29,7 +29,7 @@ export function Logo({ large = false }: { large?: boolean }) {
           large ? "text-lg" : "text-sm sm:text-base",
         )}
       >
-        EA ESPORTES
+        cnmsolution.ai
         <span className="animate-blink text-primary">_</span>
       </span>
     </Link>

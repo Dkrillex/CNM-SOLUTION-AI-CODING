@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const LINES = [
-  { t: '$ ea screen --entity "Acme Global Ltd"', cls: "text-foreground" },
+  { t: '$ cnm screen --entity "Acme Global Ltd"', cls: "text-foreground" },
   { t: "→ querying 1,000+ sources ....... ok", cls: "text-muted-foreground" },
   { t: "→ sanctions (OFAC/UN/EU) ........ clear", cls: "text-muted-foreground" },
   { t: "→ pep + adverse media .......... 2 hits", cls: "text-muted-foreground" },

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EA ENTRETENIMENTO E ESPORTES LTDA",
+  title: "cnmsolution.ai",
   description: "-",
 };
 
